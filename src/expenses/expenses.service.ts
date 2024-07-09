@@ -49,7 +49,6 @@ export class ExpensesService {
       throw new NotFoundException(`Expense with ID ${id} not found`);
     }
 
-    // Calculate the new potential total if the update is applied
     const newAmount =
       updateExpenseDto.amount !== undefined
         ? updateExpenseDto.amount
@@ -83,24 +82,26 @@ export class ExpensesService {
   }
 
   async getExpensesByType(): Promise<any[]> {
-    return this.expenseModel.aggregate([
-      {
-        $group: {
-          _id: '$type',
-          totalAmount: { $sum: '$amount' }
-        }
-      },
-      {
-        $project: {
-          _id: 0,
-          type: '$_id',
-          totalAmount: 1
-        }
-      },
-      {
-        $sort: { totalAmount: -1 }  // Optional: sort by the total amount descending
-      }
-    ]).exec();
+    return this.expenseModel
+      .aggregate([
+        {
+          $group: {
+            _id: '$type',
+            totalAmount: { $sum: '$amount' },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            type: '$_id',
+            totalAmount: 1,
+          },
+        },
+        {
+          $sort: { totalAmount: -1 },
+        },
+      ])
+      .exec();
   }
 
   private async isMonthlyLimitExceeded(

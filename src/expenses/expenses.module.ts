@@ -8,9 +8,9 @@ import { AuthModule } from 'src/auth/auth.module';
 @Module({
   imports: [
     AuthModule,
-    MongooseModule.forFeature([{ name: 'Expense', schema: ExpenseSchema }])
+    MongooseModule.forFeature([{ name: 'Expense', schema: ExpenseSchema }]),
   ],
   providers: [ExpensesService],
-  controllers: [ExpensesController]
+  controllers: [ExpensesController],
 })
 export class ExpensesModule {}
