@@ -17,8 +17,22 @@ export class ExpensesService {
     @InjectModel(Expense.name) private expenseModel: Model<Expense>,
   ) {}
 
-  async findAll(userId: string): Promise<Expense[]> {
-    return this.expenseModel.find({ user: userId }).exec();
+  async findAll(
+    userId: string,
+    startDate?: Date,
+    endDate?: Date,
+  ): Promise<Expense[]> {
+    const query: any = { user: userId };
+
+    if (startDate && endDate) {
+      query.date = { $gte: startDate, $lte: endDate };
+    } else if (startDate) {
+      query.date = { $gte: startDate };
+    } else if (endDate) {
+      query.date = { $lte: endDate };
+    }
+
+    return this.expenseModel.find(query).exec();
   }
 
   async create(

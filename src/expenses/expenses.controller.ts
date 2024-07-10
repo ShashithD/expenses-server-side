@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -21,10 +22,16 @@ export class ExpensesController {
 
   @Get()
   @UseGuards(AuthGuard())
-  async findAll(@Req() req: Request) {
+  async findAll(
+    @Req() req: Request,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+  ) {
     const userId = req.user['_id'].toString();
+    const start = startDate ? new Date(startDate) : undefined;
+    const end = endDate ? new Date(endDate) : undefined;
 
-    return this.expensesService.findAll(userId);
+    return this.expensesService.findAll(userId, start, end);
   }
 
   @Post()
