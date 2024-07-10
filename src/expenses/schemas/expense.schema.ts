@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
-// import { User } from '../../auth/schemas/user.schema';
+import mongoose, { Document } from 'mongoose';
+import { User } from 'src/auth/schemas/user.schema';
 
 export enum ExpenseType {
   FOOD = 'Food',
@@ -31,8 +31,8 @@ export class Expense extends Document {
   @Prop({ required: true, enum: ExpenseType })
   type: ExpenseType;
 
-  // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-  // user: User;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  user: User;
 }
 
 export const ExpenseSchema = SchemaFactory.createForClass(Expense);
